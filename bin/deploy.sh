@@ -31,13 +31,13 @@ if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
 			sleep 15
 			helm upgrade  -f $Chart/values.yaml  $Chart $Chart 
 			cd $TRAVIS_BUILD_DIR/bin
-			./wait-for-deployment.sh fe $Chart 180
+			./wait-for-deployment.sh web $Chart 180
    				if [ "$?" -eq 0 ]; then
-     				kubectl get pod -n$Chart | grep fe 
+     				kubectl get pod -n$Chart | grep web 
      				cd $TRAVIS_BUILD_DIR/ehealth.charts && git add . && sudo  git commit -m "Bump $Chart web to $PROJECT_VERSION" && sudo git pull && sudo git push
      				exit 0;
    				else 
-   	 				kubectl logs $(sudo kubectl get pod -n$Chart | awk '{ print $1 }' | grep fe) -n$Chart 
+   	 				kubectl logs $(sudo kubectl get pod -n$Chart | awk '{ print $1 }' | grep web) -n$Chart 
    	 				helm rollback $Chart  $(($(helm ls | grep $Chart | awk '{ print $2 }') -1)) 
    	 				exit 1;
    				fi;
