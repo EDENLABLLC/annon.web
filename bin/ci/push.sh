@@ -10,10 +10,8 @@ git config --global user.email "travis@travis-ci.com";
 git config --global user.name "Travis-CI";
 git config --global push.default upstream;
 
-FULL_REPO="https://$GH_TOKEN@$GH_REF";
-
-git remote rm origin
-git remote add origin $FULL_REPO
+REPO_URL="https://$GITHUB_TOKEN@github.com/$TRAVIS_REPO_SLUG.git";
+git remote add upstream $REPO_URL
 
 if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
   if [ "$TRAVIS_BRANCH" == "$RELEASE_BRANCH" ]; then
@@ -25,7 +23,7 @@ if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
     echo "Done. Commiting changes back to repo.";
     git add package.json;
     git commit -m "Increment version [ci skip]";
-    git push origin HEAD:$TRAVIS_BRANCH > /dev/null 2>&1;
-    git push origin HEAD:$TRAVIS_BRANCH --tag > /dev/null 2>&1;
+    git push upstream HEAD:$TRAVIS_BRANCH > /dev/null 2>&1;
+    git push upstream HEAD:$TRAVIS_BRANCH --tags > /dev/null 2>&1;
   fi;
 fi;
